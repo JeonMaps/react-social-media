@@ -9,7 +9,7 @@ import { StatusBar } from 'expo-status-bar'
 import BackButton from '../components/BackButton'
 import Input from '../components/Input'
 import Button from '../components/Button'
-
+import { supabase } from '../lib/supabase'
 
 const SignUp = () => {
   const router = useRouter();
@@ -19,9 +19,30 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async () => {
-    if(!emailRef.current || !passwordRef.current || !nameRef.current) {
+    if (!emailRef.current || !passwordRef.current || !nameRef.current) {
       Alert.alert("Sign Up", "Please fill out all the fields!")
       return;
+    }
+
+    let name = nameRef.current.trim()
+    let email = emailRef.current.trim()
+    let password = passwordRef.current.trim()
+
+    setLoading(true)
+
+    const { data: { session }, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name
+        }
+      }
+    })
+    setLoading(false)
+
+    if (error) {
+      Alert.alert('Sign up', error.message);
     }
   }
   return (

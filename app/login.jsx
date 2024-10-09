@@ -9,6 +9,7 @@ import { StatusBar } from 'expo-status-bar'
 import BackButton from '../components/BackButton'
 import Input from '../components/Input'
 import Button from '../components/Button'
+import { supabase } from '../lib/supabase'
 
 
 const Login = () => {
@@ -18,9 +19,24 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async () => {
-    if(!emailRef.current || !passwordRef.current) {
+    if (!emailRef.current || !passwordRef.current) {
       Alert.alert("Login", "Please fill out all the fields!")
       return;
+    }
+
+    let email = emailRef.current.trim()
+    let password = passwordRef.current.trim()
+
+    setLoading(true)
+    const  {error} = await supabase.auth.signInWithPassword({
+      email,
+      password
+    })
+    setLoading(false)
+
+    console.log('error: ', error)
+    if(error) {
+      Alert.alert('Login', error.message)
     }
   }
   return (
