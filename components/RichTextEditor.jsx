@@ -3,7 +3,7 @@ import React from 'react'
 import { actions, RichEditor, RichToolbar } from 'react-native-pell-rich-editor'
 import { theme } from '../constants/theme'
 
-const RichTextEditor = (editorRef, onChange) => {
+const RichTextEditor = ({editorRef, onChange}) => {
     return (
         <View style={{ minHeight: 285 }}>
             <RichToolbar
